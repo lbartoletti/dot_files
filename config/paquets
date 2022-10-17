@@ -1,0 +1,117 @@
+# comm
+signal-desktop
+telegram-desktop
+# prog
+zeal
+# irc
+quassel
+# wayland
+sway
+wl-clipboard
+seatd
+slurp
+grim
+wf-recorder
+mako
+wofi
+foot
+waybar
+xdg-desktop-portal-wlr
+xdg-desktop-portal
+xdg-user-dirs
+# mkdir ~/{Desktop,Modèles,Public,Musique,Images,Vidéos}
+swaybg
+swappy
+swaylock-effects
+qt5ct
+wayland-protocols
+webcamd
+# xwayland-devel
+
+# multimedia
+imv
+mpv
+yt-dlp
+zathura
+zathura-djvu
+zathura-pdf-mupdf
+zathura-ps
+# shell
+cbsd
+zsh
+zsh-antigen
+tmux
+7-zip
+calcurse
+neovim
+python3
+nim
+fzf
+jq
+w3m-img
+neofetch
+qemu-user-static
+freerdp
+rsync
+nimble
+tree-sister
+
+# dev
+hs-ShellCheck
+cppcheck-gui
+ccache
+lcov
+ninja
+universal-ctags
+meson
+cmake
+# rusty
+exa
+bat
+ripgrep
+
+firefox
+thunderbird
+chromium
+clamav
+clamtk
+gpgme-qt5
+password-store
+pinentry-qt5
+gnupg
+texlive-full
+
+# system
+devcpu-data-intel
+doas
+drm-kmod
+exfat-utils
+
+# fuse
+fusefs-exfat
+fusefs-sshfs
+
+# french
+fr-aspell
+fr-hunspell
+fr-libreoffice
+
+# print
+cups
+hplip
+# hplip-plugin make -C /usr/ports/print/hplip-plugin
+
+# other
+exercism
+# trouve les doublon
+jdupes
+
+# theme
+la-capitaine-icon-theme
+meslo
+noto
+terminus-font
+
+# https://github.com/mrclksr/linux-browser-installer
+# pw group mod video -m lbartoletti
+# pw group mod webcamd -m lbartoletti
