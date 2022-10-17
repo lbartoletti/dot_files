@@ -1,0 +1,10 @@
+##
+## Status Bar:
+##
+## Read `man 5 sway-bar` for more information about this section.
+# use .config/waybar/config
+
+bar {
+    id default
+    swaybar_command waybar
+}

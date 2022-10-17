@@ -1,0 +1,25 @@
+#set $mode_recording " Region (r), Output (o) or Focused (f)"
+
+#mode $mode_recording {
+#    bindsym --to-code o mode "default", exec ~/.local/scripts/screenrecorder.sh screen
+
+    # pick the region to screenrecording
+#    bindsym --to-code r mode "default", exec ~/.local/scripts/screenrecorder.sh region
+
+    # pick the focused window
+#    bindsym --to-code f mode "default", exec ~/.local/scripts/screenrecorder.sh focused
+
+    # Return to default mode.
+#    bindsym Escape mode "default"
+#}
+
+## Launch // Recording Mode ##
+# bindsym $mod+Print mode $mode_recording
+bindsym --to-code $mod+Print mode "default", exec ~/.local/scripts/screenrecorder.sh screen
+
+# pick the region to screenrecording
+bindsym --to-code $mod+Shift+Print mode "default", exec ~/.local/scripts/screenrecorder.sh region
+
+# pick the focused window
+bindsym --to-code $mod+Ctrl+Print mode "default", exec ~/.local/scripts/screenrecorder.sh focused
+

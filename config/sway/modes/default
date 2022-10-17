@@ -1,0 +1,173 @@
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    bindsym $mod+Shift+q kill
+
+    # Start your launcher
+    bindsym $mod+d exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+
+#
+# Moving around:
+#
+    # Move your focus around
+    # bindsym $mod+$left focus left
+    # bindsym $mod+$down focus down
+    # bindsym $mod+$up focus up
+    # bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    # bindsym $mod+Shift+$left move left
+    # bindsym $mod+Shift+$down move down
+    # bindsym $mod+Shift+$up move up
+    # bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # Switch to workspace
+    bindsym $mod+KP_1 workspace number 1
+    bindsym $mod+KP_2 workspace number 2
+    bindsym $mod+KP_3 workspace number 3
+    bindsym $mod+KP_4 workspace number 4
+    bindsym $mod+KP_5 workspace number 5
+    bindsym $mod+KP_6 workspace number 6
+    bindsym $mod+KP_7 workspace number 7
+    bindsym $mod+KP_8 workspace number 8
+    bindsym $mod+KP_9 workspace number 9
+    bindsym $mod+KP_0 workspace number 10
+    # Move focused container to workspace
+
+    bindsym $mod+Shift+KP_1 move container to workspace 1 ;workspace 1
+    bindsym $mod+Shift+KP_2 move container to workspace 2 ;workspace 2
+    bindsym $mod+Shift+KP_3 move container to workspace 3 ;workspace 3
+    bindsym $mod+Shift+KP_4 move container to workspace 4 ;workspace 4
+    bindsym $mod+Shift+KP_5 move container to workspace 5 ;workspace 5
+    bindsym $mod+Shift+KP_6 move container to workspace 6 ;workspace 6
+    bindsym $mod+Shift+KP_7 move container to workspace 7 ;workspace 7
+    bindsym $mod+Shift+KP_8 move container to workspace 8 ;workspace 8
+    bindsym $mod+Shift+KP_9 move container to workspace 9 ;workspace 9
+    bindsym $mod+Shift+KP_0 move container to workspace 10;workspace 10
+    bindsym $mod+Shift+f1 move container to workspace number 1
+    bindsym $mod+Shift+f2 move container to workspace number 2
+    bindsym $mod+Shift+f3 move container to workspace number 3
+    bindsym $mod+Shift+f4 move container to workspace number 4
+    bindsym $mod+Shift+f5 move container to workspace number 5
+    bindsym $mod+Shift+f6 move container to workspace number 6
+    bindsym $mod+Shift+f7 move container to workspace number 7
+    bindsym $mod+Shift+f8 move container to workspace number 8
+    bindsym $mod+Shift+f9 move container to workspace number 9
+    bindsym $mod+Shift+f10 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+
+    # Navigate between workspace
+    bindsym $mod+tab workspace next_on_output
+    bindsym $mod+Shift+tab workspace prev_on_output
+
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+
+
+### Idle configuration
+
+bindsym $mod+l exec "$lock -f; sleep 1; pkill -USR1 swayidle"
+
+#
+# Multimedia keys
+#
+    bindsym $mod+f1 exec ~/.local/scripts/volume toggle
+    bindsym $mod+f2 exec ~/.local/scripts/volume -5
+    bindsym $mod+f3 exec ~/.local/scripts/volume +5
+    bindsym $mod+f4 exec ~/.local/scripts/volume mute
+
+    ## Pulse Audio controls
+    bindsym XF86AudioRaiseVolume exec ~/.local/scripts/volume +5
+    bindsym XF86AudioLowerVolume exec ~/.local/scripts/volume -5
+    bindsym XF86AudioMute        exec ~/.local/scripts/volume mute
+
+    # Sreen brightness controls
+    # Requires backlight (FreeBSD >= 13.0)
+    bindsym XF86MonBrightnessUp   exec backlight +
+    bindsym $mod+KP_Add exec backlight +
+    bindsym $mod+KP_Subtract exec backlight -
+    bindsym XF86MonBrightnessDown exec backlight -
+
+#
+# Some notifications
+#
+
+# $mod+Alt (Mod4)
+
+# Battery
+bindsym $mod+Mod1+b exec notify-send "🔋 $(sysctl -n hw.acpi.battery.life)%"
+
+# Memory
+# https://unicode-table.com/en/1F40F/
+# ram = sheep!
+bindsym $mod+Mod1+m exec notify-send "🐏 $(top | awk -F' ' '/Mem/ {gsub(/M/,"");print $10}' )/$(printf %.0f $(bc -e "`sysctl -n hw.physmem`*0.000001"))"
+
+# CPU
+bindsym $mod+Mod1+c exec notify-send "⏲  $(vmstat 1 2 | tail -1 | awk '{print $15}')"

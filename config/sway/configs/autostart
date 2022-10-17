@@ -1,0 +1,10 @@
+exec {
+    '[ -x "$(command -v foot)" ] && foot --server'
+}
+
+# screencast
+exec pipewire -v
+exec /usr/local/libexec/xdg-desktop-portal -v -r
+exec /usr/local/libexec/xdg-desktop-portal-wlr -l DEBUG
+# notification
+exec mako

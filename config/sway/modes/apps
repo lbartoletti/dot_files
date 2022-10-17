@@ -1,0 +1,15 @@
+# Open generic soft with a key:
+set $open_app "Open app: (f) firefox, (m) thunderbird, (t) telegram, (s) signal, (q) qgis"
+
+mode $open_app {
+    bindsym f exec firefox; mode "default"
+    bindsym m exec thunderbird; mode "default"
+    bindsym s exec signal-desktop; mode "default"
+    bindsym t exec telegram-desktop; mode "default"
+    bindsym q exec xfreerdp +clipboard +fonts /rfx /size:1920x1080 /u:jupyter /p:jupyter /v:jupyter; mode "default"
+
+    # return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+o mode $open_app

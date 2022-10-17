@@ -1,0 +1,61 @@
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+# set $left h
+# set $down j
+# set $up k
+# set $right l
+# Your preferred terminal emulator
+set $term footclient #foot for wayland otherwise: $TERMINAL
+set $term_float foot -a floating_shell
+
+# Your preferred application launcher
+# Note: pass the final command to swaymsg so that the resulting window can be opened
+# on the original workspace that the command was run on.
+# dmenu
+# set $menu dmenu-wl_path | dmenu-wl | xargs swaymsg exec --
+# wofi
+set $menu wofi
+
+set $wallpaper ~/.local/share/wallpapers/freebsd-wallpaper_blue.jpg
+set $wallpaper_lock ~/.local/share/wallpapers/freebsd-wallpaper_red.jpg
+
+#set $lock swaylock -i `0x40`
+set $lock swaylock -i $wallpaper_lock
+
+set $bg #202020
+set $bga #2a2a2a
+set $fg #dddddd
+set $fgi #969696
+set $fgu #a8a8a8
+set $btf #202020
+
+set $font_family MesloLGS NF
+set $font_size 11
+
+# class                 border bg   text indicator child_border
+client.focused          $bg    $bg  $fg  $bga      $bg
+client.focused_inactive $bg    $bg  $fgi $bg       $bg
+client.unfocused        $bg    $bg  $fgu $bg       $bg
+
+# screenshot
+# whole screen
+set $screenshot_screen_clipboard grim - | wl-copy && notify-send "Screenshot of whole screen saved to clipboard"
+set $screenshot_screen_edit grim - | swappy -f -
+set $screenshot_screen_file grim $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of whole screen saved to folder"
+
+# selected region
+set $screenshot_selection_clipboard grim -g "$(slurp)" - | wl-copy && notify-send "Screenshot of selected region saved to clipboard"
+set $screenshot_selection_edit grim -g "$(slurp)" - | swappy -f -
+set $screenshot_selection_file grim -g "$(slurp)" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of selected region saved to folder"
+
+# focused windows
+set $screenshot_focused_window_clipboard grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | wl-copy && notify-send "Screenshot of active window saved to clipboard"
+set $screenshot_focused_window_edit grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | swappy -f -
+set $screenshot_focused_window_file grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of active window saved to folder"
+
+#set $screenrecording_screen_file wf-recorder -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of whole screen saved to folder"
+#set $screenrecording_selection_file wf-recorder -g "$(slurp)" -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of selected region saved to folder"
+#set $screenrecording_focused_window_file wf-recorder -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of active window saved to folder"

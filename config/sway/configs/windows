@@ -1,0 +1,7 @@
+
+for_window [app_id="^menu$"] floating enable, border none
+for_window [app_id=mpv] sticky enable
+for_window [floating] border csd
+for_window [app_id="firefox" title="Picture-in-Picture"] floating enable, sticky enable, border none
+for_window [app_id="firefox" title="Firefox — Sharing Indicator"] kill
+
