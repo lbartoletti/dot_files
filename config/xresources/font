@@ -1,0 +1,10 @@
+! vim: set filetype=xdefaults:
+
+!! Fonts Xresources config
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
+Xft.hinting: 1
+Xft.autohint: 0
+Xft.antialias: 1
+Xft.rgba: rgb
+Xft.dpi: 120
