@@ -6,7 +6,7 @@ mode $open_app {
     bindsym m exec thunderbird; mode "default"
     bindsym s exec signal-desktop; mode "default"
     bindsym t exec telegram-desktop; mode "default"
-    bindsym q exec xfreerdp +clipboard +fonts /rfx /size:1920x1080 /u:jupyter /p:jupyter /v:jupyter; mode "default"
+    bindsym q exec qgis; mode "default"
 
     # return to default mode
     bindsym Return mode "default"
