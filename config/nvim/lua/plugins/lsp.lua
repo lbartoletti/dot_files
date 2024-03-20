@@ -149,13 +149,9 @@ return {
 			-- 	capabilities = capabilities,
 			-- })
 
-			-- nimls
-			-- nimble install nimlsp
-			require("lspconfig")["nimls"].setup({
-				on_attach = on_attach,
-				capabilities = capabilities,
-				cmd = {"nimlsp"},
-				filetypes = {"nim"},
+			-- nim
+			-- nimble install nimlangserver
+			require("lspconfig")["nim_langserver"].setup({
 			})
 		end,
 	},
