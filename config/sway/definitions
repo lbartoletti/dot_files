@@ -52,10 +52,6 @@ set $screenshot_selection_edit grim -g "$(slurp)" - | swappy -f -
 set $screenshot_selection_file grim -g "$(slurp)" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of selected region saved to folder"
 
 # focused windows
-set $screenshot_focused_window_clipboard grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | wl-copy && notify-send "Screenshot of active window saved to clipboard"
-set $screenshot_focused_window_edit grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | swappy -f -
-set $screenshot_focused_window_file grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of active window saved to folder"
-
-#set $screenrecording_screen_file wf-recorder -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of whole screen saved to folder"
-#set $screenrecording_selection_file wf-recorder -g "$(slurp)" -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of selected region saved to folder"
-#set $screenrecording_focused_window_file wf-recorder -g "$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" -f $(xdg-user-dir PICTURES)/$(date +'screenrecording_%Y-%m-%d-%H%M%S.mp4') && notify-send "Screenrecording of active window saved to folder"
+set $screenshot_focused_window_clipboard swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"' | grim -g- - | wl-copy && notify-send "Screenshot of active window saved to clipboard"
+set $screenshot_focused_window_edit swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"' | grim -g- - | swappy -f -
+set $screenshot_focused_window_file swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"' | grim -g - $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png') && notify-send "Screenshot of active window saved to folder"
