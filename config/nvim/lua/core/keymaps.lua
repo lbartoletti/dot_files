@@ -48,12 +48,12 @@ map("n", "<c-p>", ":bp<cr>", "prev buffer")
 map("n", "<c-x>", ":bd<cr>", "exit buffer")
 
 -- tabs
-map("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
-map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
-map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
-map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
-map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
-map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+map("n", "<leader><tab>f", "<cmd>tabfirst<cr>")
+map("n", "<leader><tab>l", "<cmd>tablast<cr>")
+map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>")
+map("n", "<leader><tab>]", "<cmd>tabnext<cr>")
+map("n", "<leader><tab>d", "<cmd>tabclose<cr>")
+map("n", "<leader><tab>[", "<cmd>tabprevious<cr>")
 
 -- Stay in indent mode
 map("v", "<", "<gv")
