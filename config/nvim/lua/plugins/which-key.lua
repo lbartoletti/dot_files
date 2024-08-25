@@ -3,22 +3,18 @@ return {
 		"folke/which-key.nvim",
 		config = function()
 			local wk = require("which-key")
-			wk.setup()
-			wk.register(
+			wk.add(
 				{
-					["<leader>"] = {
-						b = { name = "Buffer" },
-						f = { name = "File" },
-						d = { name = "Delete/Close" },
-						q = { name = "Quit" },
-						s = { name = "Search" },
-						l = { name = "LSP" },
-						u = { name = "UI" },
-						b = { name = "Debugging" },
-						g = { name = "Git" },
-						r = { name = "Refactor" },
-						["<tab>"] = { name = "Tabs" },
-					}
+					{ "<leader><tab>", group = "Tabs" },
+					{ "<leader>b", group = "Debugging" },
+					{ "<leader>d", group = "Delete/Close" },
+					{ "<leader>f", group = "File" },
+					{ "<leader>g", group = "Git" },
+					{ "<leader>l", group = "LSP" },
+					{ "<leader>q", group = "Quit" },
+					{ "<leader>r", group = "Refactor" },
+					{ "<leader>s", group = "Search" },
+					{ "<leader>u", group = "UI" },
 				}
 			)
 		end
