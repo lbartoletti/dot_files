@@ -1,0 +1,13 @@
+# HTML
+text/html; w3m -I %{charset} -T text/html; copiousoutput;
+text/plain; nvim %s
+
+#PDFs
+application/pdf; /usr/local/bin/zathura %s pdf
+
+#Images
+image/png; /usr/local/bin/imv %s
+image/jpeg; /usr/local/bin/imv %s
+
+#.ics / calendar
+application/ics; khal import -a my_calendar %s;
