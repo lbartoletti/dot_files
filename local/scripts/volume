@@ -8,12 +8,13 @@
 #
 # Loïc Bartoletti
 # Update: 2021-12-27
+# Update: 2025-02-25 (FreeBSD 14)
 
 # ALSA device/driver (Linux)
 ALSA_DEV="Master"
 # OSS device (FreeBSD/DragonFly)
 OSS_DEV="vol"
-OSS_DEFAULT=50
+OSS_DEFAULT=0.5
 
 
 if [ $# -ne 1 ]; then
@@ -50,33 +51,50 @@ vol_amixer() {
     esac
 }
 
-
-# mixer: FreeBSD/DragonFly OSS
+# mixer: FreeBSD 14 OSS
 vol_mixer() {
-    volume=`mixer -S ${OSS_DEV} | cut -f2 -d':'`
+    # Get current volume value
+    current_vol=$(mixer vol | awk -F "=" '/volume/ {print $2}' | cut -d: -f1)
+    
     case "$1" in
         toggle)
-            if [ ${volume} -eq 0 ]
+            if [ "$current_vol" = "0.00" ] || [ "$current_vol" = "0" ]
             then
-                # TODO: save vol state?
-                mixer ${OSS_DEV} ${OSS_DEFAULT}
+                # Restore default volume
+                mixer vol=${OSS_DEFAULT}
             else
-                mixer ${OSS_DEV} 0
+                mixer vol=0
             fi
             ;;
         mute)
-            mixer ${OSS_DEV} 0
+            mixer vol=0
             ;;
         unmute)
-            mixer ${OSS_DEV} ${OSS_DEFAULT}
+            mixer vol=${OSS_DEFAULT}
             ;;
-        +[1-9]*|-[1-9]*)
-            sign=`echo "$1" | cut -c1`
+        +[0-9]*)
+            # Increase volume (format +0.1, +0.05, etc.)
             value="${1#?}"
-            mixer ${OSS_DEV} "${sign}${value}:${sign}${value}"
+            # Use awk for decimal math
+            new_vol=$(awk "BEGIN {print $current_vol + $value; exit}")
+            # Ensure volume doesn't exceed 1
+            new_vol=$(awk "BEGIN {print ($new_vol > 1) ? 1 : $new_vol; exit}")
+            mixer vol=$new_vol
             ;;
-        [1-9]*)
-            mixer ${OSS_DEV} "$1:$1"
+        -[0-9]*)
+            # Decrease volume (format -0.1, -0.05, etc.)
+            value="${1#?}"
+            # Use awk for decimal math
+            new_vol=$(awk "BEGIN {print $current_vol - $value; exit}")
+            # Ensure volume doesn't go below 0
+            new_vol=$(awk "BEGIN {print ($new_vol < 0) ? 0 : $new_vol; exit}")
+            mixer vol=$new_vol
+            ;;
+        [0-9]*)
+            # Set volume directly
+            # Ensure value is between 0 and 1
+            new_vol=$(awk "BEGIN {print ($1 > 1) ? 1 : (($1 < 0) ? 0 : $1); exit}")
+            mixer vol=$new_vol
             ;;
         *)
             echo "ERROR: mixer: unknown control command"
@@ -84,7 +102,6 @@ vol_mixer() {
             ;;
     esac
 }
-
 
 OS=`uname -s`
 case "${OS}" in
