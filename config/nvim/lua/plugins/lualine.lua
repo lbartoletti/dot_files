@@ -10,7 +10,25 @@ return {
 				theme = lualine_theme,
 				component_separators = "|",
 				section_separators = "",
+				symbols = {
+					unix = '',
+					dos = '',
+					mac = '',
+				}
+
 			},
+			-- sections = {
+			-- 	lualine_a = {
+			-- 		{
+			-- 			'fileformat',
+			-- 			symbols = {
+			-- 				unix = '',
+			-- 				dos = '',
+			-- 				mac = '',
+			-- 			}
+			-- 		}
+			-- 	}
+			-- },
 		})
 	end,
 }
