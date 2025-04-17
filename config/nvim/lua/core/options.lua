@@ -7,7 +7,7 @@ local opts = {
 	wrap = false,
 	termguicolors = true,
 	number = true,
-	relativenumber = true,
+--	relativenumber = true,
 }
 
 -- Set options from table
