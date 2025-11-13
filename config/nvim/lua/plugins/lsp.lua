@@ -1,39 +1,43 @@
--- LSP Configuration & Plugins
 return {
+	-- LSP Configuration - Simple and stable
 	{
-		"neovim/nvim-lspconfig",
-		dependencies = {
-			{
-				"j-hui/fidget.nvim",
-				tag = "legacy",
-				event = "LspAttach",
-			},
-			"folke/neodev.nvim",
-			"RRethy/vim-illuminate",
-			"hrsh7th/cmp-nvim-lsp",
-		},
+		"hrsh7th/cmp-nvim-lsp",
 		config = function()
-			-- Quick access via keymap
-			require("helpers.keys").map("n", "<leader>M", "<cmd>Mason<cr>", "Show Mason")
+			-- Suppress ALL notify messages during LSP setup
+			local original_notify = vim.notify
+			vim.notify = function() end
 
-			-- Neodev setup before LSP config
-			require("neodev").setup()
+			-- Setup capabilities
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-			-- Turn on LSP status information
-			require("fidget").setup()
+			-- LSP keymaps function
+			local on_attach = function(client, bufnr)
+				local opts = { noremap = true, silent = true, buffer = bufnr }
 
-			-- Set up cool signs for diagnostics
-			local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-			for type, icon in pairs(signs) do
-				local hl = "DiagnosticSign" .. type
-				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+				vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+				vim.keymap.set("n", "gI", vim.lsp.buf.implementation, opts)
+				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+				vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+				vim.keymap.set("n", "<leader>f", function()
+					vim.lsp.buf.format({ async = true })
+				end, opts)
 			end
 
 			-- Diagnostic config
-			local config = {
+			vim.diagnostic.config({
 				virtual_text = false,
 				signs = {
-					active = signs,
+					text = {
+						[vim.diagnostic.severity.ERROR] = " ",
+						[vim.diagnostic.severity.WARN] = " ",
+						[vim.diagnostic.severity.HINT] = " ",
+						[vim.diagnostic.severity.INFO] = " ",
+					},
 				},
 				update_in_insert = true,
 				underline = true,
@@ -43,104 +47,93 @@ return {
 					style = "minimal",
 					border = "rounded",
 					source = "always",
-					header = "",
-					prefix = "",
 				},
-			}
-			vim.diagnostic.config(config)
+			})
 
-			-- This function gets run when an LSP connects to a particular buffer.
-			local on_attach = function(client, bufnr)
-				local lsp_map = require("helpers.keys").lsp_map
+			-- C/C++ - clangd using direct vim.lsp.start
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = { "c", "cpp", "objc", "objcpp" },
+				callback = function()
+					vim.lsp.start({
+						name = "clangd",
+						cmd = { "/usr/local/llvm21/bin/clangd", "--background-index", "--clang-tidy" },
+						root_dir = vim.fs.find({ "compile_commands.json", "compile_flags.txt", ".clangd", ".git" }, { upward = true })[1],
+						capabilities = capabilities,
+						on_attach = on_attach,
+					})
+				end,
+			})
 
-				lsp_map("<leader>lr", vim.lsp.buf.rename, bufnr, "Rename symbol")
-				lsp_map("<leader>la", vim.lsp.buf.code_action, bufnr, "Code action")
-				lsp_map("<leader>ld", vim.lsp.buf.type_definition, bufnr, "Type definition")
-				lsp_map("<leader>ls", require("telescope.builtin").lsp_document_symbols, bufnr, "Document symbols")
-
-				lsp_map("gd", vim.lsp.buf.definition, bufnr, "Goto Definition")
-				lsp_map("gr", require("telescope.builtin").lsp_references, bufnr, "Goto References")
-				lsp_map("gI", vim.lsp.buf.implementation, bufnr, "Goto Implementation")
-				lsp_map("K", vim.lsp.buf.hover, bufnr, "Hover Documentation")
-				lsp_map("gD", vim.lsp.buf.declaration, bufnr, "Goto Declaration")
-
-				-- Create a command `:Format` local to the LSP buffer
-				vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-					vim.lsp.buf.format()
-				end, { desc = "Format current buffer with LSP" })
-
-				lsp_map("<leader>ff", "<cmd>Format<cr>", bufnr, "Format")
-
-				-- Attach and configure vim-illuminate
-				require("illuminate").on_attach(client)
-			end
-
-			-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
-			-- Lua
-			-- require("lspconfig")["lua_ls"].setup({
-			-- 	on_attach = on_attach,
-			-- 	capabilities = capabilities,
-			-- 	settings = {
-			-- 		Lua = {
-			-- 			completion = {
-			-- 				callSnippet = "Replace",
-			-- 			},
-			-- 			diagnostics = {
-			-- 				globals = { "vim" },
-			-- 			},
-			-- 			workspace = {
-			-- 				library = {
-			-- 					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-			-- 					[vim.fn.stdpath("config") .. "/lua"] = true,
-			-- 				},
-			-- 			},
-			-- 		},
-			-- 	},
-			-- })
-
-			-- Python
-			require("lspconfig")["pylsp"].setup({
-				on_attach = on_attach,
-				capabilities = capabilities,
-				settings = {
-					pylsp = {
-						plugins = {
-							flake8 = {
-								enabled = true,
-								maxLineLength = 88, -- Black's line length
-							},
-							-- Disable plugins overlapping with flake8
-							pycodestyle = {
-								enabled = false,
-							},
-							mccabe = {
-								enabled = false,
-							},
-							pyflakes = {
-								enabled = false,
-							},
-							-- Use Black as the formatter
-							autopep8 = {
-								enabled = false,
+			-- Python - pylsp
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "python",
+				callback = function()
+					vim.lsp.start({
+						name = "pylsp",
+						cmd = { "pylsp" },
+						root_dir = vim.fs.find({ "pyproject.toml", "setup.py", ".git" }, { upward = true })[1],
+						capabilities = capabilities,
+						on_attach = on_attach,
+						settings = {
+							pylsp = {
+								plugins = {
+									flake8 = { enabled = true, maxLineLength = 88 },
+									pycodestyle = { enabled = false },
+									mccabe = { enabled = false },
+									pyflakes = { enabled = false },
+									autopep8 = { enabled = false },
+								},
 							},
 						},
-					},
-				},
+					})
+				end,
 			})
 
-			-- clangd
-			-- require("lspconfig")["clangd"].setup({
-			-- 	on_attach = on_attach,
-			-- 	capabilities = capabilities,
-			-- })
-
-			-- nim
-			-- nimble install nimlangserver
-			require("lspconfig")["nim_langserver"].setup({
+			-- Nim
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "nim",
+				callback = function()
+					vim.lsp.start({
+						name = "nim_langserver",
+						cmd = { "nim_langserver" },
+						root_dir = vim.fs.find({ "*.nimble", ".git" }, { upward = true })[1],
+						capabilities = capabilities,
+						on_attach = on_attach,
+					})
+				end,
 			})
+
+			-- Markdown
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "markdown",
+				callback = function()
+					vim.lsp.start({
+						name = "marksman",
+						cmd = { "marksman", "server" },
+						root_dir = vim.fs.find({ ".marksman.toml", ".git" }, { upward = true })[1],
+						capabilities = capabilities,
+						on_attach = on_attach,
+					})
+				end,
+			})
+
+			-- Restore notifications
+			vim.notify = original_notify
 		end,
+	},
+
+	-- Progress notifications
+	{
+		"j-hui/fidget.nvim",
+		event = "LspAttach",
+		config = function()
+			require("fidget").setup()
+		end,
+	},
+
+	-- Highlight symbol under cursor
+	{
+		"RRethy/vim-illuminate",
+		event = "LspAttach",
 	},
 }
